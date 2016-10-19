@@ -1,5 +1,5 @@
-//attempt at creating a script to parse incremental line by line text from a readout
 function (context, args) {
+  //attempt at creating a script to parse incremental line by line text from a readout
   var
     target = args.t,
     //n = target.name.split('.')[0], return script name

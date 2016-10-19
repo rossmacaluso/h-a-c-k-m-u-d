@@ -1,20 +1,22 @@
-//attempt at creating a script to parse incremental line by line text from a readout
-function (context, args) {
+function (context, a) {
+  //attempt at creating a script to parse incremental line by line text from a readout
+  // usage: f_projects{ t:#s.script.name, k1:key, v1:value }
   var
-    target = args.t,
-    k1 = args.k,
-    v1 = args.v,
+    t = a.t,
+    k = a.k,
+    v = a.v,
     o = #s.scripts.lib(),
     a = {},
-    cc = args.cc,
-    pm = [ /release date for(\s\w+)/g, /Look for(\s\w+)/g, /project(\s\w+)/g, /new developments on(\s\w+)/g, /Work continues on(\s\w+)/g ],
+    pm = [ /date for(\s\w+)/g, /Look for(\s\w+)/g, /project(\s\w+)/g, /developments on(\s\w+)/g, /continues on(\s\w+)/g ],
     pml = [],
+    i = "",
+    tx = [],
     m = [];
 
-  a[k1] = v1;
-  var tx = target.call( a );
+  a[k] = v;
+  tx = t.call( a );
 
-  for ( var i=0; i<5; i++ ) {
+  for ( i=0; i<5; i++ ) {
     do {
       m = pm[i].exec( tx )
       if ( m != [] && m != null ) {
@@ -25,6 +27,5 @@ function (context, args) {
     }
     while ( m != null );
   }
-
   return { ok: true, output: o.get_log(), debug: "input str len: " + tx.length + "    " + "projects found: " + pml.length  }
 }
