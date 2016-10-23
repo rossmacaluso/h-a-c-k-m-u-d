@@ -8,7 +8,7 @@ function ( context, a ) {
   //#TODO get c003_triad working...
   var
     cd = /color_digit/,
-    cT = /c\d{2}3\wtr\w{3}_\d/,
+    cT = /c\d{2}3\wtr\w{5}/,
     f = [],
     i = 0,
     ir = 0,
@@ -30,20 +30,20 @@ function ( context, a ) {
     tr = /EZ_\d{2}|c\d{3}/g;
 
     //check security level ( can comment out if need chars )
-    sl = #s.scripts.get_level({ name:t.name });
-    if ( sl < 4 ) {
-      return {
-        ok:false,
-        msg:"SL < 4",
-        sl:"SL: " + sl
-      }
-    }
+    // sl = #s.scripts.get_level({ name:t.name });
+    // if ( sl < 4 ) {
+    //   return {
+    //     ok:false,
+    //     msg:"SL < 4",
+    //     sl:"SL: " + sl
+    //   }
+    // }
 
   function ca ( k ) {
     r = t.call( k );
     rLines = r.split( "\n" );
     for ( ir = 0; ir < rLines.length; ir++ ) {
-      o.log( "Return Line: " + rLines[ir] );
+      //o.log( "Return Line: " + rLines[ir] );
       if ( ur.test( rLines[ir] ) ) {
         o.log( "SUCCESS: " + tm );
         s = true;
@@ -64,7 +64,7 @@ function ( context, a ) {
 
   ca( k ); // inital arg call
 
-  // do {
+  do {
     // test EZ_## Locks
     if ( STRING(tm).includes( "E" ) ) {
       //o.log( "LOCK: " + tm );
@@ -103,7 +103,7 @@ function ( context, a ) {
       for ( i = 0; i < c.length; i++ ) {
         k[tm] = c[i];
         ca( k );
-        if ( s || cd.test( r ) || cC.test( r )  == true )  {
+        if ( s || cd.test( r ) || cC.test( r ) || cT.test( r )  == true )  {
           break;
         }
       }
@@ -127,11 +127,12 @@ function ( context, a ) {
         }
       }
       if ( cT.test( r ) ) {
-        break;
+        s = true;
+        o.log( "FAILED: c003_triad_1" );
       }
 
-  // }
-  // while ( !s );
+  }
+  while ( !s );
 
   return {
     ok: s,
