@@ -1,16 +1,24 @@
 ##Safe T1:
         * halperyon
-        * subobital
+        * suborbital_airlines
         * nuutec
         * weyland
+        * soylentbean
+        * setec_gas
 
         * .external
+        * .entry
         * .pub
-##Untrusted:
-        * accenture.entry
+        * .pub_info
+
+##Untrusted Users:
+        * accenture
         * futuretech
         * weylend
-        * blackcore
+
+##Untrusted Scripts:
+        * .entry
+
 ##Safe T2:
 
 ##/Macros:

@@ -5,10 +5,11 @@ function ( context, a ) {
   // 10.16.2016
   // by: Ross Macaluso
   // ---------------------
-  //#TODO get c003_triad working...
+  //#TODO slim the code down: chars: 1646 with security check
   var
     cd = /color_digit/,
     cT = /c\d{2}3\wtr\w{5}/,
+    cT_s = "",
     f = [],
     i = 0,
     ir = 0,
@@ -29,21 +30,21 @@ function ( context, a ) {
     tm = [],
     tr = /EZ_\d{2}|c\d{3}/g;
 
-    //check security level ( can comment out if need chars )
-    // sl = #s.scripts.get_level({ name:t.name });
-    // if ( sl < 4 ) {
-    //   return {
-    //     ok:false,
-    //     msg:"SL < 4",
-    //     sl:"SL: " + sl
-    //   }
-    // }
+    // check security level ( can comment out if need chars )
+    sl = #s.scripts.get_level({ name:t.name });
+    if ( sl < 4 ) {
+      return {
+        ok:false,
+        msg:"SL < 4",
+        sl:"SL: " + sl
+      }
+    }
 
   function ca ( k ) {
     r = t.call( k );
     rLines = r.split( "\n" );
     for ( ir = 0; ir < rLines.length; ir++ ) {
-      //o.log( "Return Line: " + rLines[ir] );
+      o.log( "Return Line: " + rLines[ir] );
       if ( ur.test( rLines[ir] ) ) {
         o.log( "SUCCESS: " + tm );
         s = true;
@@ -67,7 +68,6 @@ function ( context, a ) {
   do {
     // test EZ_## Locks
     if ( STRING(tm).includes( "E" ) ) {
-      //o.log( "LOCK: " + tm );
       for ( i = 0; i < l.length; i++ ) {
         k[ tm ] = l[ i ];
         ca( k );
@@ -75,7 +75,6 @@ function ( context, a ) {
           break;
         }
       }
-    }
       if ( /digit/.test( r ) ) {
         for ( i = 0; i < 10; i++ ) {
           k.digit = i ;
@@ -94,6 +93,7 @@ function ( context, a ) {
           }
         }
       }
+    }
     // test c00# Locks
     if ( STRING(tm).includes( "c00" ) ) {
       // define c00 lock specific vars
@@ -107,7 +107,6 @@ function ( context, a ) {
           break;
         }
       }
-    }
       if ( cd.test( r ) ) {
         for ( i = 0; i < c.length; i++ ) {
           k.color_digit = i;
@@ -127,9 +126,17 @@ function ( context, a ) {
         }
       }
       if ( cT.test( r ) ) {
-        s = true;
-        o.log( "FAILED: c003_triad_1" );
+        cT_s = cT.exec( r );
+        for ( i = 0; i < c.length; i++ ) {
+          k[ cT_s ] = c[ i ];
+          ca( k );
+          if ( s || dr.test( r ) || cT.test( r )  == true )  {
+            break;
+          }
+        }
       }
+    }
+
 
   }
   while ( !s );
