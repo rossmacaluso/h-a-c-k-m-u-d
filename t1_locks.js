@@ -44,7 +44,7 @@ function ( context, a ) {
     r = t.call( k );
     rLines = r.split( "\n" );
     for ( ir = 0; ir < rLines.length; ir++ ) {
-      o.log( "Return Line: " + rLines[ir] );
+      //o.log( "Return Line: " + rLines[ir] );
       if ( ur.test( rLines[ir] ) ) {
         o.log( "SUCCESS: " + tm );
         s = true;
