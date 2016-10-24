@@ -15,6 +15,7 @@ function (context, a) { // t:#s.username.script num: 1 | Null
     o = #s.scripts.lib(),
     t,
     k,
+    fs_t = '',
     fs_nl = [],
     fsName = '',
     fs_pages = [],
@@ -25,6 +26,8 @@ function (context, a) { // t:#s.username.script num: 1 | Null
     fs_p_r = [],
     fs_loc_l = [],
     fs_loc_gl = [],
+    fs_p_r_s,
+
     tx = [],
     m = [];
 
@@ -39,7 +42,7 @@ function (context, a) { // t:#s.username.script num: 1 | Null
         }
       }
     }
-    return { usage: "t1_find{t:#s.username.script,num:1}", safeTargets:fs_nl } // return safe targets to process later num is number of locations to return
+    return { usage: "t1_find{t:#s.user.script,num:1}", ST:fs_nl } // return safe targets to process later num is number of locations to return
   }
 
   if ( a != null ) {
@@ -63,7 +66,7 @@ function (context, a) { // t:#s.username.script num: 1 | Null
       }
     }
     catch( error ){
-      o.log ( "username.script: " + a.t.name + " Failed To Parse: " + error );
+      o.log ( "user.script: " + a.t.name + " F T P: " + error );
     }
   }
 
@@ -88,13 +91,12 @@ function (context, a) { // t:#s.username.script num: 1 | Null
         fs_p_r = a.t.call( k );
         for ( var si = 0; si < fs_p_r.length; si++ ) {
           if ( typeof( fs_p_r[si] ) == "string" ){
-            var fs_p_r_s = fs_p_r[si].split("\n");
+            fs_p_r_s = fs_p_r[si].split("\n");
             for ( var ssi = 0; ssi < fs_p_r_s.length; ssi++ ) {
               if ( loc_re.test( fs_p_r_s[ssi] ) == true ) {
-                var fs_t = fs_p_r_s[ssi];
+                fs_t = fs_p_r_s[ssi];
                 fs_loc_gl.push( fs_t );
                 if ( fs_loc_l.length < num ) {
-                  o.log ( "T1 Safe Target: " + fs_t );
                   fs_loc_l.push( fs_t );
                 }
               }
@@ -102,12 +104,19 @@ function (context, a) { // t:#s.username.script num: 1 | Null
           }
         }
       }
+      //filter to remove any remaining false values
+      var fs_f_gl = fs_loc_gl.filter( Boolean );
+      var fs_f_l = fs_loc_l.filter( Boolean );
+
+      for ( i = 0; i < fs_f_l.length; i++ ) {
+        o.log ( "T1: " + fs_f_l[i] );
+      }
     }
+
     catch( error ){
-      o.log ( "Failed To Get Location: " + error );
+      o.log ( "FTGL: " + error );
     }
   }
 
-
-  return { ok: true, output: o.get_log(), pFound: "Projects Found: " + fs_proj.length, lFound: "Locations Found: " + fs_loc_gl.length, args: k  }
+  return { ok: true, output: o.get_log(), pFound: "Proj Found: " + fs_proj.length, lFound: "Loc Found: " + fs_loc_gl.length, args: k  }
 }
