@@ -46,13 +46,13 @@ function ( context, a ) {
     for ( ir = 0; ir < rLines.length; ir++ ) {
       //o.log( "Return Line: " + rLines[ir] );
       if ( ur.test( rLines[ir] ) ) {
-        o.log( "SUCCESS: " + tm );
+        //o.log( "SUCCESS: " + tm );
         s = true;
         ur.lastIndex = 0;
       }
       if ( dr.test( rLines[ir] ) ) {
         tm = tr.exec( rLines[ir] );
-        o.log( "FAILED: " + tm );
+        //o.log( "FAILED: " + tm );
         s = false;
         tr.lastIndex = 0;
       }
@@ -141,9 +141,11 @@ function ( context, a ) {
   }
   while ( !s );
 
+  o.log( "Successfully Broke All Locks!" );
+
   return {
     ok: s,
-    output: o.get_log(),
-    args: k
+    output: o.get_log()
+    //args: k
   }
 }

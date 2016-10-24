@@ -95,24 +95,23 @@ function (context, a) { // t:#s.username.script num: 1 | Null
             for ( var ssi = 0; ssi < fs_p_r_s.length; ssi++ ) {
               if ( loc_re.test( fs_p_r_s[ssi] ) == true ) {
                 fs_t = fs_p_r_s[ssi];
-                fs_loc_gl.push( fs_t );
-                if ( fs_loc_l.length < num ) {
-                  fs_loc_l.push( fs_t );
+                if ( fs_t != "<null>" && fs_t != "<missing>" && fs_t != "<error>" && fs_t != "<empty>" && fs_t != "<nil>" && fs_t.length > 1 ) {
+                  fs_loc_gl.push( fs_t );
+                  if ( fs_loc_l.length < num ) {
+                    fs_loc_l.push( fs_t );
+                  }
                 }
               }
             }
           }
         }
       }
-      //filter to remove any remaining false values
-      var fs_f_gl = fs_loc_gl.filter( Boolean );
-      var fs_f_l = fs_loc_l.filter( Boolean );
 
-      for ( i = 0; i < fs_f_l.length; i++ ) {
-        o.log ( "T1: " + fs_f_l[i] );
+      for ( i = 0; i < fs_loc_l.length; i++ ) {
+        o.log ( "T1: " + fs_loc_l[i] );
       }
-    }
 
+    }
     catch( error ){
       o.log ( "FTGL: " + error );
     }
