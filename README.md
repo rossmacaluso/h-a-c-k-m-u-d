@@ -10,6 +10,7 @@
         * .entry
         * .pub
         * .pub_info
+        * .public
 
 ##Untrusted Users:
         * accenture
