@@ -4,7 +4,7 @@ function (context, a) { // t:#s.username.script num: 1 | Null
   // input username.script and the amount of locations to return
   var
     wl = [ "soylentbean", "weyland", "halperyon", "setec_gas", "bunnybat_hut", "suborbital_airlines", "ros13" ],
-    ws = [ "pub_info", "external", "pub", "extern", "entry", "public" ],
+    ws = [ "pub_info", "external", "pub", "extern", "entry", "public", "access", "p" ],
     c_re = /with\s(\w+):"(\w+)"/gmi,
     p_re = /strategy\s(\w+)/,
     pm_re = /(date for|Look for|project|developments on|continues on)\s(\w+(.sh|.exe)?)/gmi,
@@ -27,7 +27,6 @@ function (context, a) { // t:#s.username.script num: 1 | Null
     fs_loc_l = [],
     fs_loc_gl = [],
     fs_p_r_s,
-
     tx = [],
     m = [];
 

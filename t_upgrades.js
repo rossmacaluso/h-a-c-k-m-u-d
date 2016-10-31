@@ -1,10 +1,10 @@
 function (context, a) { // i:1, to:"username", confirm:true
-  // attempt at creating a fullsec t1 location finder, queries fullSec entries, compares them to known trusted username.scripts
-  // returns compiled list of valid locations
-  // i = index can be a number, list or ALL|all and will transfer the requested upgrades to specified user
+  // script to transfer upgrades by index or all to a username
+  // i = index can be an integer, list or ALL|all and will transfer the requested upgrades to specified user
+  // example usage: t_upgrades{ to:"username", i:ALL||i:1||i:[1,2], confirm:true||empty }
   var
     o = #s.scripts.lib(),
-    upg_i = a.i,
+    upgr_i = a.i,
     upgr_to = a.to,
     c = a.confirm,
     i_re = /all/gmi,
@@ -15,92 +15,52 @@ function (context, a) { // i:1, to:"username", confirm:true
     su = #s.sys.upgrades();
 
   o.log( "System Upgrades: " + su.length );
-  o.log( "indexList Length: " + upg_i.length );
+  //o.log( "indexList Length: " + upgr_i.length );
 
-  if ( i_re.test( upg_i ) == true ) {
-    if ( upgr_to != undefined ) {
-      o.log( "Transfering All Upgrades! To: " + upgr_to );
-      if ( !( "confirm" in a ) ) {
-        o.log( "add {confirm:true} To Confirm" );
-      }
-      else {
-        if ( a.confirm == true ) {
-          upgrade = #s.sys.upgrades( { info:upg_i } );
-          loaded = upgrade["loaded"];
-          #s.sys.upgrades( { unload:upg_i } );
-          k.i = upg_i;
-          k.to = upgr_to;
-          #s.sys.xfer_upgrade_to( k );
-        }
-        else {
-          o.log( "confirm != true")
-        }
-      }
-    }
-    else {
-      o.log( "Please Add {to:username}" );
-    }
+  if ( !( "to" in a ) ) {
+    o.log( "Please Add {to:username}" );
+    return { ok:false, output: o.get_log() }
+  }
+  if ( !( "confirm" in a ) ) {
+    o.log( "add {confirm:true} To Confirm" );
   }
 
-  else if ( upg_i.length >= 1 ) {
-    if ( upgr_to != undefined ) {
-      for ( var ai = 0; ai < upg_i.length; ai++ ) {
-        upgrade = #s.sys.upgrades( { info:upg_i[ai] } );
+  if ( a == null ){
+    o.log( "Usage: t_upgrades{ to:username, i:ALL||i:1||i:[1,2], confirm:true||empty }" );
+    return { ok:false, output: o.get_log() }
+  }
+  else {
+    xfer_upgr ( upgr_to, upgr_i, c );
+  }
+
+  function xfer_upgr ( upgr_to, upgr_i, c ) {
+    upgrade = #s.sys.upgrades( { info:upgr_i } );
+    if ( i_re.test( upgr_i ) == true ) {
+      o.log( "Transfering All Upgrades" + " To: " + upgr_to );
+    }
+    else if ( upgr_i.length > 1 ) {
+      for ( var i = 0; i < upgr_i.length; i++ ) {
+        upgrade = #s.sys.upgrades( { info:upgr_i[i] } );
         o.log( "Transfering Upgrade: " + upgrade["name"] + " To: " + upgr_to );
       }
-      if ( !( "confirm" in a ) ) {
-        o.log( "add {confirm:true} To Confirm" );
-      }
-      else {
-        if ( a.confirm == true ) {
-          for ( var bi = 0; bi < upg_i.length; bi++ ) {
-            upgrade = #s.sys.upgrades( { info:upg_i[bi] } );
-            loaded = upgrade["loaded"];
-            if ( loaded == true ) {
-              #s.sys.upgrades( { unload:upg_i[bi] } );
-            }
-          }
-          k.i = upg_i;
-          k.to = upgr_to;
-          #s.sys.xfer_upgrade_to( k );
-        }
-        else {
-          o.log( "confirm != true")
-        }
-      }
     }
     else {
-      o.log( "Please Add {to:username}" );
-    }
-  }
-
-  else if ( typeof(upg_i) == "number" ) {
-    if ( upgr_to != undefined ) {
-      upgrade = #s.sys.upgrades( { info:upg_i } );
       o.log( "Transfering Upgrade: " + upgrade["name"] + " To: " + upgr_to );
-      if ( !( "confirm" in a ) ) {
-        o.log( "add {confirm:true} To Confirm" );
+    }
+    if ( c ) {
+      loaded = upgrade["loaded"];
+      o.log( "Loaded: " + loaded );
+      if ( loaded == true ) {
+        #s.sys.upgrades( { unload:upgr_i } );
       }
-      else {
-        if ( a.confirm == true ) {
-          loaded = upgrade["loaded"];
-          o.log( "Loaded: " + loaded );
-          if ( loaded == true ) {
-            #s.sys.upgrades( { unload:upg_i } );
-          }
-          k.i = upg_i;
-          k.to = upgr_to;
-          #s.sys.xfer_upgrade_to( k );
-        }
-        else {
-          o.log( "confirm != true")
-        }
-      }
+      k.i = upgr_i;
+      k.to = upgr_to;
+      #s.sys.xfer_upgrade_to( k );
     }
     else {
-      o.log( "Please Add {to:username}" );
+      o.log( "confirm != true")
     }
   }
 
-  return { ok: true, output: o.get_log(), args: a  }
+  return { ok: true, output: o.get_log(), args: a }
 }
